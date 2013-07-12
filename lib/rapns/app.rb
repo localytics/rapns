@@ -7,6 +7,7 @@ module Rapns
     end
 
     has_many :notifications, :class_name => 'Rapns::Notification'
+    belongs_to :job, :class_name => 'Rapns::Job'
 
     validates :name, :presence => true, :uniqueness => { :scope => [:type, :environment] }
     validates_numericality_of :connections, :greater_than => 0, :only_integer => true

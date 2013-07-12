@@ -8,6 +8,7 @@ module Rapns
     serialize :registration_ids
 
     belongs_to :app, :class_name => 'Rapns::App'
+    belongs_to :job, :class_name => 'Rapns::Job'
 
     if Rapns.attr_accessible_available?
       attr_accessible :badge, :device_token, :sound, :alert, :data, :expiry,:delivered,
