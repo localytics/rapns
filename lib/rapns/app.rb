@@ -3,11 +3,8 @@ module Rapns
     self.table_name = 'rapns_apps'
 
     if Rapns.attr_accessible_available?
-      attr_accessible :name, :environment, :certificate, :password, :connections, :auth_key
+      attr_accessible :name, :environment, :certificate, :password, :connections, :auth_key, :daemon_id
     end
-
-    attr_readonly :daemon_id
-    before_create :set_daemon_id
 
     has_many :notifications, :class_name => 'Rapns::Notification'
     belongs_to :job, :class_name => 'Rapns::Job'
@@ -17,8 +14,8 @@ module Rapns
 
     validate :certificate_has_matching_private_key
 
-    scope :for_current_daemon, -> { 
-      where(daemon_id: Rapns.config.daemon_id) 
+    scope :for_daemon_id, lambda { |daemon_id|
+      where(daemon_id: daemon_id) 
     }
 
     private
@@ -34,10 +31,6 @@ module Rapns
         end
       end
       result
-    end
-
-    def set_daemon_id
-      write_attribute(:daemon_id, Rapns.config.daemon_id)
     end
   end
 end

@@ -13,11 +13,8 @@ module Rapns
     if Rapns.attr_accessible_available?
       attr_accessible :badge, :device_token, :sound, :alert, :data, :expiry,:delivered,
         :delivered_at, :failed, :failed_at, :error_code, :error_description, :deliver_after,
-        :alert_is_json, :app, :app_id, :collapse_key, :delay_while_idle, :registration_ids
+        :alert_is_json, :app, :app_id, :collapse_key, :delay_while_idle, :registration_ids, :daemon_id
     end
-
-    attr_readonly :daemon_id
-    before_create :set_daemon_id
 
     validates :expiry, :numericality => true, :allow_nil => true
     validates :app, :presence => true
@@ -31,8 +28,8 @@ module Rapns
       where('app_id IN (?)', apps.map(&:id))
     }
 
-    scope :for_current_daemon, -> { 
-      where(daemon_id: Rapns.config.daemon_id) 
+    scope :for_daemon_id, lambda { |daemon_id|
+      where(daemon_id: daemon_id) 
     }
 
     def initialize(*args)
@@ -60,12 +57,6 @@ module Rapns
 
     def payload_size
       payload.bytesize
-    end
-
-    private
-
-    def set_daemon_id
-      write_attribute(:daemon_id, Rapns.config.daemon_id)
     end
   end
 end
