@@ -9,7 +9,7 @@ module Rapns
 
   CONFIG_ATTRS = [:foreground, :push_poll, :feedback_poll, :embedded,
     :airbrake_notify, :check_for_errors, :pid_file, :batch_size,
-    :push, :store, :logger]
+    :push, :store, :logger, :daemon_id]
 
   class ConfigurationWithoutDefaults < Struct.new(*CONFIG_ATTRS)
   end
@@ -74,6 +74,8 @@ module Rapns
       self.apns_feedback_callback = nil
       self.store = :active_record
       self.logger = nil
+      self.daemon_id = 0
+
 
       # Internal options.
       self.embedded = false

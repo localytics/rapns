@@ -16,7 +16,7 @@ module Rapns
       end
 
       def self.sync
-        apps = Rapns::App.all
+        apps = Rapns::App.for_current_daemon
         apps.each { |app| sync_app(app) }
         removed = runners.keys - apps.map(&:id)
         removed.each { |app_id| runners.delete(app_id).stop }

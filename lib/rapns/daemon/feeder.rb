@@ -39,7 +39,10 @@ module Rapns
         begin
           idle = Rapns::Daemon::AppRunner.idle.map(&:app)
 
-          Rapns::Daemon.store.deliverable_notifications(idle).each do |notification|
+          source = Rapns::Notification.ready_for_delivery.for_apps(idle)
+          source = source.for_current_daemon
+
+          source.each do |notification|
             Rapns::Daemon::AppRunner.enqueue(notification)
             reflect(:notification_enqueued, notification)
           end

@@ -6,6 +6,9 @@ module Rapns
       attr_accessible :name, :environment, :certificate, :password, :connections, :auth_key
     end
 
+    attr_readonly :daemon_id
+    before_create :set_daemon_id
+
     has_many :notifications, :class_name => 'Rapns::Notification'
     belongs_to :job, :class_name => 'Rapns::Job'
 
@@ -13,6 +16,10 @@ module Rapns
     validates_numericality_of :connections, :greater_than => 0, :only_integer => true
 
     validate :certificate_has_matching_private_key
+
+    scope :for_current_daemon, -> { 
+      where(daemon_id: Rapns.config.daemon_id) 
+    }
 
     private
 
@@ -27,6 +34,10 @@ module Rapns
         end
       end
       result
+    end
+
+    def set_daemon_id
+      write_attribute(:daemon_id, Rapns.config.daemon_id)
     end
   end
 end

@@ -16,6 +16,9 @@ module Rapns
         :alert_is_json, :app, :app_id, :collapse_key, :delay_while_idle, :registration_ids
     end
 
+    attr_readonly :daemon_id
+    before_create :set_daemon_id
+
     validates :expiry, :numericality => true, :allow_nil => true
     validates :app, :presence => true
 
@@ -26,6 +29,10 @@ module Rapns
 
     scope :for_apps, lambda { |apps|
       where('app_id IN (?)', apps.map(&:id))
+    }
+
+    scope :for_current_daemon, -> { 
+      where(daemon_id: Rapns.config.daemon_id) 
     }
 
     def initialize(*args)
@@ -53,6 +60,12 @@ module Rapns
 
     def payload_size
       payload.bytesize
+    end
+
+    private
+
+    def set_daemon_id
+      write_attribute(:daemon_id, Rapns.config.daemon_id)
     end
   end
 end
