@@ -24,4 +24,11 @@ module Rapns
 	    write_attribute(:status, value)
 	  end
 	end
+
+	module JobStatus
+  	New = 0
+  	Ready = 1
+  	Sent = 2
+  	Completed = 3
+	end
 end
