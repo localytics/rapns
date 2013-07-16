@@ -49,7 +49,7 @@ module Rapns
 	  end
 
 		def notifications_failed
-			Rapns::Notification.count(:all, :conditions=>['job_id = ? AND failed = ?', job_id, true])
+			Rapns::Notification.count(:all, :conditions=>['job_id = ? AND failed = ?', self.id, true])
 	  end
 	end
 
