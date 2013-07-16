@@ -15,6 +15,22 @@ module Rapns
       where(daemon_id: daemon_id) 
     }
 
+    scope :new, lambda {
+      where(status: Rapns::JobStatus::New) 
+    }
+
+    scope :ready, lambda {
+      where(status: Rapns::JobStatus::Ready) 
+    }
+
+    scope :sent, lambda {
+      where(status: Rapns::JobStatus::Sent) 
+    }
+
+    scope :completed, lambda {
+      where(status: Rapns::JobStatus::Completed) 
+    }
+
 		def set_status_changed_at_to_now
 	    self.status_changed_at = Time.now
 	  end
@@ -22,6 +38,18 @@ module Rapns
 	  def status=(value)
 	    set_status_changed_at_to_now
 	    write_attribute(:status, value)
+	  end
+
+	  def notifications_remaining
+	  	Rapns::Notification.count(:all, :conditions=>['job_id = ? AND delivered = ? AND failed = ?', self.id, false, false])
+	  end
+
+		def notifications_delivered
+	  	Rapns::Notification.count(:all, :conditions=>['job_id = ? AND delivered = ?', self.id, true])
+	  end
+
+		def notifications_failed
+			Rapns::Notification.count(:all, :conditions=>['job_id = ? AND failed = ?', job_id, true])
 	  end
 	end
 
