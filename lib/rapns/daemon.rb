@@ -12,6 +12,7 @@ require 'rapns/daemon/delivery'
 require 'rapns/daemon/delivery_queue'
 require 'rapns/daemon/feeder'
 require 'rapns/daemon/app_runner'
+require 'rapns/daemon/app_sync'
 require 'rapns/daemon/delivery_handler'
 
 require 'rapns/daemon/apns/delivery'
@@ -45,6 +46,8 @@ module Rapns
       write_pid_file
       Upgraded.check(:exit => true)
       AppRunner.sync
+      @app_sync = AppSync.new
+      @app_sync.start
       Feeder.start
     end
 
@@ -52,6 +55,7 @@ module Rapns
       puts "\nShutting down..." unless quiet
       Feeder.stop
       AppRunner.stop
+      @app_sync.stop
       delete_pid_file
     end
 

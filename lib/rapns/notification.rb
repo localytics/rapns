@@ -16,6 +16,7 @@ module Rapns
         :alert_is_json, :app, :app_id, :collapse_key, :delay_while_idle, :registration_ids, :daemon_id
     end
 
+    validates_uniqueness_of :device_token, :scope => :job_id, :if => Proc.new { |n| !n.job.nil? }
     validates :expiry, :numericality => true, :allow_nil => true
     validates :app, :presence => true
 

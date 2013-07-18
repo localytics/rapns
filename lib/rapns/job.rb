@@ -3,7 +3,7 @@ module Rapns
 		self.table_name = 'rapns_jobs'
 
     if Rapns.attr_accessible_available?
-      attr_accessible :campaign_id, :status, :status_changed_at, :daemon_id
+      attr_accessible :job_id, :status, :status_changed_at, :daemon_id
     end
 
 		has_one :app, :class_name => 'Rapns::App'
@@ -15,19 +15,19 @@ module Rapns
       where(daemon_id: daemon_id) 
     }
 
-    scope :new, lambda {
+    scope :for_new, lambda {
       where(status: Rapns::JobStatus::New) 
     }
 
-    scope :ready, lambda {
+    scope :for_ready, lambda {
       where(status: Rapns::JobStatus::Ready) 
     }
 
-    scope :sent, lambda {
+    scope :for_sent, lambda {
       where(status: Rapns::JobStatus::Sent) 
     }
 
-    scope :completed, lambda {
+    scope :for_completed, lambda {
       where(status: Rapns::JobStatus::Completed) 
     }
 
