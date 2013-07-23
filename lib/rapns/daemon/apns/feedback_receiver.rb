@@ -49,6 +49,7 @@ module Rapns
 
             if !@app.job.nil?
               @app.job.feedback_checked_at = Time.now
+              @app.job.save!
             end
           rescue StandardError => e
             Rapns.logger.error(e)
