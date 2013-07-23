@@ -3,7 +3,7 @@ module Rapns
 		self.table_name = 'rapns_jobs'
 
     if Rapns.attr_accessible_available?
-      attr_accessible :job_id, :status, :status_changed_at, :daemon_id
+      attr_accessible :job_id, :daemon_id, :status, :status_changed_at, :feedback_checked_at
     end
 
 		has_one :app, :class_name => 'Rapns::App'

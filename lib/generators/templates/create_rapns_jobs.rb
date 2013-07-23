@@ -5,6 +5,7 @@ class CreateRapnsJobs < ActiveRecord::Migration
       t.integer     :daemon_id,               :null => false, :default => 0
       t.integer     :status,                  :default => 0, :limit => 1
       t.datetime    :status_changed_at,       :null => false
+      t.datetime    :feedback_checked_at,     :null => true
       t.timestamps
     end
   end

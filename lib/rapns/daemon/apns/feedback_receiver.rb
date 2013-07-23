@@ -46,6 +46,10 @@ module Rapns
               timestamp, device_token = parse_tuple(tuple)
               create_feedback(timestamp, device_token)
             end
+
+            if !@app.job.nil?
+              @app.job.feedback_checked_at = Time.now
+            end
           rescue StandardError => e
             Rapns.logger.error(e)
           ensure
