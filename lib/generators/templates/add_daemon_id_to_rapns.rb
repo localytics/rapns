@@ -1,7 +1,7 @@
 class AddDaemonIdToRapns < ActiveRecord::Migration
   def self.up
-    add_column :rapns_notifications, :daemon_id, :integer, :null => false, :default => 0
-    add_column :rapns_apps, :daemon_id, :integer, :null => false, :default => 0
+    add_column :rapns_notifications, :daemon_id, :string, :null => true
+    add_column :rapns_apps, :daemon_id, :string, :null => true
   end
 
   def self.down

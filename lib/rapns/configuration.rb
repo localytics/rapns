@@ -74,8 +74,7 @@ module Rapns
       self.apns_feedback_callback = nil
       self.store = :active_record
       self.logger = nil
-      self.daemon_id = 0
-
+      self.daemon_id = Localytics::Config['name']
 
       # Internal options.
       self.embedded = false
