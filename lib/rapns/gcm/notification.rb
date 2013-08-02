@@ -6,6 +6,8 @@ module Rapns
       validates_with Rapns::Gcm::PayloadDataSizeValidator
       validates_with Rapns::Gcm::RegistrationIdsCountValidator
 
+      validates_uniqueness_of :registration_ids, :scope => :job_id, :if => Proc.new { |n| !n.job.nil? }
+
       def registration_ids=(ids)
         ids = [ids] if ids && !ids.is_a?(Array)
         super

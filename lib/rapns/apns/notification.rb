@@ -9,6 +9,8 @@ module Rapns
       validates_with Rapns::Apns::DeviceTokenFormatValidator
       validates_with Rapns::Apns::BinaryNotificationValidator
 
+      validates_uniqueness_of :device_token, :scope => :job_id, :if => Proc.new { |n| !n.job.nil? }
+
       alias_method :attributes_for_device=, :data=
       alias_method :attributes_for_device, :data
 
