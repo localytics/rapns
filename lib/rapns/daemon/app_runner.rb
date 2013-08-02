@@ -19,7 +19,7 @@ module Rapns
         apps = Rapns::App.for_daemon_id(Rapns.config.daemon_id)
 
         apps.each do |app|
-          if !app.job.nil? && app.job.status != Rapns::JobStatus::Ready
+          if !app.job.nil? && app.job.status != Rapns::JobStatus::Ready && app.job.status != Rapns::JobStatus::Sent
             next
           else
             sync_app(app) 
