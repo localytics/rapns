@@ -20,8 +20,8 @@ module Rapns
 
         apps.each do |app|
           if !app.job.nil? && app.job.status != Rapns::JobStatus::Ready
-            break
-          else  
+            next
+          else
             sync_app(app) 
           end
         end
