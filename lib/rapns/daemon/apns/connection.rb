@@ -104,9 +104,14 @@ module Rapns
           tcp_socket = TCPSocket.new(@host, @port)
           tcp_socket.setsockopt(Socket::SOL_SOCKET, Socket::SO_KEEPALIVE, 1)
           tcp_socket.setsockopt(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
-          ssl_socket = OpenSSL::SSL::SSLSocket.new(tcp_socket, @ssl_context)
-          ssl_socket.sync = true
-          ssl_socket.connect
+          if @app.environment == "development"
+            ssl_socket = tcp_socket
+            tcp_socket = nil
+          else
+            ssl_socket = OpenSSL::SSL::SSLSocket.new(tcp_socket, @ssl_context)
+            ssl_socket.sync = true
+            ssl_socket.connect
+          end
           Rapns.logger.info("[#{@app.name}] Connected to #{@host}:#{@port}")
           [tcp_socket, ssl_socket]
         end
