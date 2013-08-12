@@ -4,9 +4,6 @@ module Rapns
 
     self.table_name = 'rapns_notifications'
 
-    # TODO: Dump using multi json.
-    serialize :registration_ids
-
     belongs_to :app, :class_name => 'Rapns::App'
     belongs_to :job, :class_name => 'Rapns::Job'
 

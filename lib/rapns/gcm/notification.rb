@@ -1,6 +1,9 @@
 module Rapns
   module Gcm
     class Notification < Rapns::Notification
+      # TODO: Dump using multi json.
+      serialize :registration_ids
+
       validates :registration_ids, :presence => true
       validates_with Rapns::Gcm::ExpiryCollapseKeyMutualInclusionValidator
       validates_with Rapns::Gcm::PayloadDataSizeValidator
