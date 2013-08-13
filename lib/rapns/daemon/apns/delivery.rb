@@ -16,21 +16,17 @@ module Rapns
           255 => "None (unknown error)"
         }
 
-        def initialize(app, conneciton, notification)
+        def initialize(app, connection, response_handler, notification)
           @app = app
-          @connection = conneciton
+          @connection = connection
+          @response_handler = response_handler
           @notification = notification
         end
 
         def perform
           begin
             @connection.write(@notification.to_binary)
-            check_for_error if Rapns.config.check_for_errors
-            mark_delivered
-            Rapns.logger.info("[#{@app.name}] #{@notification.id} sent to #{@notification.device_token}")
-          rescue Rapns::DeliveryError, Rapns::Apns::DisconnectionError => error
-            mark_failed(error.code, error.description)
-            raise
+            @response_handler.enqueue(@notification)
           end
         end
 

@@ -21,6 +21,7 @@ require 'rapns/daemon/apns/connection'
 require 'rapns/daemon/apns/app_runner'
 require 'rapns/daemon/apns/delivery_handler'
 require 'rapns/daemon/apns/feedback_receiver'
+require 'rapns/daemon/apns/response_handler'
 
 require 'rapns/daemon/gcm/delivery'
 require 'rapns/daemon/gcm/app_runner'
