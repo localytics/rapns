@@ -1,11 +1,11 @@
 module Rapns
   module Daemon
     module Apns
-      class ResponseHandler
+      class DeliveryBatcher
         include Reflectable
         include InterruptibleSleep
 
-        SLEEP_INTERVAL = 1
+        SLEEP_INTERVAL = 0.1
         SELECT_TIMEOUT = 0.2
         ERROR_TUPLE_BYTES = 6
         APN_ERRORS = {
@@ -35,7 +35,7 @@ module Rapns
             loop do
               break if @stop
                 begin
-                  mark_delivered
+                  deliver_queue
                   check_for_error         
                   interruptible_sleep SLEEP_INTERVAL
                 rescue Exception => e
@@ -54,14 +54,12 @@ module Rapns
 
         def enqueue(notification)
           synchronize do
-            @queued_ids << notification.id
-            @queue << notification
-          end
-        end
-
-        def queued?(id)
-          synchronize do
-            @queued_ids.include?(id)
+            if queued?(notification.id)
+              Rapns.logger.info("[#{@app.name}] #{notification.id} was already sent, skipping")
+            else
+              @queued_ids << notification.id
+              @queue << notification
+            end
           end
         end
 
@@ -71,7 +69,11 @@ module Rapns
           @mutex.synchronize(&blk)
         end
 
-        def mark_delivered
+        def queued?(id)
+          @queued_ids.include?(id)        
+        end
+
+        def deliver_queue
           synchronize do
             processing = Array.new(@queue)
             if processing.length > 0
@@ -79,6 +81,11 @@ module Rapns
               Rapns.logger.info("[#{@app.name}] Marking #{processing.length} notifications delivered")
               Notification.update_all("delivered = 1", ["id IN (?)", ids])
               @queue = @queue - processing
+
+              processing.each do |notification|
+                @connection.write(notification.to_binary)   
+                Rapns.logger.info("[#{@app.name}] #{notification.id} sent to #{notification.device_token}") 
+              end          
             end
           end
         end

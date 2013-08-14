@@ -14,17 +14,17 @@ module Rapns
         end
 
         def deliver(notification)
-          unless @response_handler
-            @response_handler = ResponseHandler.new(@app, connection)
-            @response_handler.start      
+          unless @delivery_batcher
+            @delivery_batcher = DeliveryBatcher.new(@app, connection)
+            @delivery_batcher.start      
           end    
 
-          Rapns::Daemon::Apns::Delivery.perform(@app, connection, @response_handler, notification)
+          @delivery_batcher.enqueue(notification)
         end
 
         def stopped
           @connection.close if @connection
-          @response_handler.stop if @response_handler
+          @delivery_batcher.stop if @delivery_batcher
         end
 
         protected
