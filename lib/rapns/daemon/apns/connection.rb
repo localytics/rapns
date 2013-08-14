@@ -34,6 +34,14 @@ module Rapns
           end
         end
 
+        def closed?
+          if @ssl_socket
+            @ssl_socket.closed?
+          else
+            false
+          end
+        end
+
         def read(num_bytes)
           @ssl_socket.read(num_bytes)
         end
