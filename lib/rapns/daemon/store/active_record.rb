@@ -11,7 +11,7 @@ module Rapns
         def deliverable_notifications(apps)
           with_database_reconnect_and_retry do
             batch_size = Rapns.config.batch_size
-            relation = Rapns::Notification.ready_for_delivery.for_apps(apps)
+            relation = Rapns::Notification.for_daemon_id(Rapns.config.daemon_id).ready_for_delivery.for_apps(apps)
             relation = relation.limit(batch_size) unless Rapns.config.push
             relation.to_a
           end
