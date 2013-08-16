@@ -19,14 +19,14 @@ module Rapns
         end
       end
 
-      def pop
+      def pop(n)
         @mutex.synchronize do
           while true
             if @queue.empty?
               @waiting.push Thread.current
               @mutex.sleep
             else
-              return @queue.shift
+              return @queue.shift(n)
             end
           end
         end

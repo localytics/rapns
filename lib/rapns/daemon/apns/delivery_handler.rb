@@ -13,8 +13,15 @@ module Rapns
           @host, @port = HOSTS[@app.environment.to_sym]
         end
 
-        def deliver(notification)
-          Rapns::Daemon::Apns::Delivery.perform(@app, connection, notification)
+        def deliver(notifications)          
+          unless Rapns.config.check_for_errors
+            Rapns.logger.info("[#{@app.name}] Marking #{notifications.length} notifications delivered")
+            Notification.update_all("delivered = 1", ["id IN (?)", notifications.map(&:id)])
+          end
+
+          notifications.each do |notification|
+            Rapns::Daemon::Apns::Delivery.perform(@app, connection, notification)
+          end
         end
 
         def stopped

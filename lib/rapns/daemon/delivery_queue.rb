@@ -30,8 +30,8 @@ module Rapns
         synchronize { @queue.size }
       end
 
-      def notification_processed
-        synchronize { @num_notifications -= 1 }
+      def batch_processed(n)
+        synchronize { @num_notifications -= n }
       end
 
       def notifications_processed?

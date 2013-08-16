@@ -8,7 +8,7 @@ module Rapns
       def start
         @thread = Thread.new do
           loop do
-            handle_next_notification
+            handle_next_batch
             break if @stop
           end
         end
@@ -28,21 +28,24 @@ module Rapns
       def stopped
       end
 
-      def handle_next_notification
+      def handle_next_batch
         begin
-          notification = queue.pop
+          notifications = queue.pop(100)
         rescue DeliveryQueue::WakeupError
+          Rapns.logger.error(e)
           return
         end
 
         begin
-          deliver(notification)
-          reflect(:notification_delivered, notification)
+          deliver(notifications)
+          notifications.each do |notification|
+            reflect(:notification_delivered, notification)
+          end
         rescue StandardError => e
           Rapns.logger.error(e)
           reflect(:error, e)
         ensure
-          queue.notification_processed
+          queue.batch_processed(notifications.length)
         end
       end
     end
