@@ -27,14 +27,9 @@ module Rapns
 
         def mark_delivered(notification)
           with_database_reconnect_and_retry do
-            #notification.delivered = true
-            #notification.delivered_at = Time.now
-            #notification.save!(:validate => false)
-
-            # perf tuning, use SQL directly instead of ActiveRecord
-            conn = ::ActiveRecord::Base.connection
-            sql = "UPDATE rapns_notifications SET delivered=1 where id=#{notification.id}"
-            conn.execute(sql)
+            notification.delivered = true
+            notification.delivered_at = Time.now
+            notification.save!(:validate => false)
           end
         end
 
