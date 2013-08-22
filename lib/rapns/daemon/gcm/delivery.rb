@@ -8,8 +8,9 @@ module Rapns
         GCM_URI = URI.parse('https://android.googleapis.com/gcm/send')
         UNAVAILABLE_STATES = ['Unavailable', 'InternalServerError']
 
-        def initialize(app, http, notification)
+        def initialize(app, auth_key, http, notification)
           @app = app
+          @auth_key = auth_key
           @http = http
           @notification = notification
         end
@@ -151,7 +152,7 @@ module Rapns
 
         def do_post
           post = Net::HTTP::Post.new(GCM_URI.path, initheader = {'Content-Type'  => 'application/json',
-                                                                 'Authorization' => "key=#{@notification.app.auth_key}"})
+                                                                 'Authorization' => "key=#{@auth_key}"})
           post.body = @notification.as_json.to_json
           @http.request(GCM_URI, post)
         end

@@ -16,8 +16,8 @@ module Rapns
           @app = app
           @host, @port = HOSTS[@app.environment.to_sym]
           @poll = poll
-          @certificate = app.certificate
-          @password = app.password
+          @certificate = Rapns.config.encryptor_key.present? ? app.certificate.decrypt : app.certificate
+          @password = Rapns.config.encryptor_key.present? ? app.password.decrypt : app.password
         end
 
         def start

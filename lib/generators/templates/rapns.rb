@@ -26,6 +26,11 @@
   # Define a custom logger.
   # config.logger = MyLogger.new
 
+  # Daemon ID
+  # config.daemon_id = 1
+
+  # Encryptor key
+  # config.encryptor_key = nil
  end
 
 Rapns.reflect do |on|

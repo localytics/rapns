@@ -23,8 +23,10 @@ module Rapns
     def certificate_has_matching_private_key
       result = false
       if certificate.present?
-        x509 = OpenSSL::X509::Certificate.new(certificate) rescue nil
-        pkey = OpenSSL::PKey::RSA.new(certificate, password) rescue nil
+        cert = Rapns.config.encryptor_key.present? ? certificate.decrypt : certificate
+        pass = Rapns.config.encryptor_key.present? ? password.decrypt : password
+        x509 = OpenSSL::X509::Certificate.new(cert) rescue nil
+        pkey = OpenSSL::PKey::RSA.new(cert, pass) rescue nil
         result = !x509.nil? && !pkey.nil?
         unless result
           errors.add :certificate, 'Certificate value must contain a certificate and a private key.'

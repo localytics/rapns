@@ -33,5 +33,6 @@ load 'config/environment.rb'
 load 'config/initializers/rapns.rb' if File.exist?('config/initializers/rapns.rb')
 
 Rapns.config.update(config)
+Rapns.configure_encryptor
 Rapns.require_for_daemon
 Rapns::Daemon.start

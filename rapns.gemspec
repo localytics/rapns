@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "multi_json", "~> 1.0"
   s.add_dependency "net-http-persistent"
+  s.add_dependency "encryptor"  
 
   if defined? JRUBY_VERSION
     s.platform = 'java'

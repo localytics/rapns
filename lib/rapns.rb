@@ -1,5 +1,6 @@
 require 'active_record'
 require 'multi_json'
+require 'encryptor'
 
 module Rapns
   def self.attr_accessible_available?
@@ -43,6 +44,10 @@ module Rapns
   def self.require_for_daemon
     require 'rapns/daemon'
     require 'rapns/patches'
+  end
+
+  def self.configure_encryptor
+    ::Encryptor.default_options.merge!(:key => Rapns.config.encryptor_key) if Rapns.config.encryptor_key.present?
   end
 
   def self.logger
