@@ -3,7 +3,7 @@ module Rapns
     class AppSync
       include InterruptibleSleep
 
-      def initialize(poll = 60)
+      def initialize(poll = 10)
         @poll = poll
       end
 
