@@ -20,7 +20,7 @@ module Rapns
 
         not_running = []
         apps.each do |app|
-          if !app.job.nil? && app.job.status != Rapns::JobStatus::Ready && app.job.status != Rapns::JobStatus::Sent
+          if !app.job.nil? && app.job.status == Rapns::JobStatus::Completed
             not_running << app
             next
           else
