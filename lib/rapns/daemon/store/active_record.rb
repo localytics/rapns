@@ -32,7 +32,7 @@ module Rapns
             #notification.save!(:validate => false)
 
             # perf tuning, use SQL directly instead of ActiveRecord
-            ActiveRecord::Base.connection_pool.with_connection do |conn|
+            ::ActiveRecord::Base.connection_pool.with_connection do |conn|
               sql = "UPDATE rapns_notifications SET delivered=1 where id=#{notification.id}"
               conn.execute(sql)
             end
